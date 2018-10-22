@@ -1,2 +1,2 @@
-# Reinforcement Learning Sarsa
+# Reinforcement Learning SARSA
 
