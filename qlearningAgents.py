@@ -126,9 +126,12 @@ class QLearningAgent(ReinforcementAgent):
             #take random action if true
             if util.flipCoin(self.epsilon):
                 action=random.choice(legalActions)
+                self.epsilon = 0.1*self.epsilon
+                print (self.epsilon)
             #take best policy
             else:
                 action=self.getPolicy(state) 
+                #self.epsilon = 1.2*self.epsilon
         return action
         #util.raiseNotDefined()
 
@@ -142,11 +145,12 @@ class QLearningAgent(ReinforcementAgent):
           it will be called on your behalf
         """
         "*** YOUR CODE HERE ***"
-        #V(s)=Q(s,a)+alpha(R(s)+alpha*V(s')-Q(s,a))
-        #print(self.getQValue(state, action))
-        self.values[(state,action)]=self.getQValue(state, action)+self.alpha*(reward+self.discount*self.getValue(nextState)-self.getQValue(state,action))
-        #print(self.values[(state,action)])
-        #util.raiseNotDefined()
+        
+         
+        possibleActions = self.getLegalActions(nextState)
+        R = reward
+        R = reward + self.discount * self.getQValue(nextState, self.getAction(nextState))
+        self.values[(state, action)] = self.getQValue(state, action) + self.alpha * (R - self.getQValue(state, action))
 
     def getPolicy(self, state):
         return self.computeActionFromQValues(state)
@@ -210,16 +214,13 @@ class ApproximateQAgent(PacmanQAgent):
         """
         "*** YOUR CODE HERE ***"
         #Q(s,a) = Summation from i=1 to n fi(s, a)*wi
-        Q=0
-        featureVectors=self.featExtractor.getFeatures(state,action)
-        #print("Vectors ", featureVectors)
-        for eachFeature in featureVectors:
-            #print("Feature ",eachFeature)
-            #print("Weights ",self.weights[eachFeature])
-            f=featureVectors[eachFeature]
-            w=self.weights[eachFeature]
-            Q=Q+(f * w)
-        return Q
+        QValue = 0.0 
+        features = self.featExtractor.getFeatures(state, action)
+        #print 'features', features
+        for feature in features:
+          #print feature
+          QValue += features[feature] * self.weights[feature]
+        return QValue
         #util.raiseNotDefined()
 
     def update(self, state, action, nextState, reward):
@@ -228,14 +229,12 @@ class ApproximateQAgent(PacmanQAgent):
         """
         "*** YOUR CODE HERE ***"
         #difference = (r + lambda * maxQ(s',a')) - Q(s, a)
-        maxQ=self.computeValueFromQValues(nextState)
-        difference = (reward + self.discount * maxQ) - self.getQValue(state,action)
 
         #wi = wi + alpha* difference * fi(s, a)
-        featureVectors=self.featExtractor.getFeatures(state,action)
-        for eachFeature in featureVectors:
-            f=featureVectors[eachFeature]
-            self.weights[eachFeature] = self.weights[eachFeature] + self.alpha * difference * f
+        features = self.featExtractor.getFeatures(state, action)
+        difference = reward + self.discount * self.getQValue(nextState,self.getAction(nextState)) - self.getQValue(state, action)
+        for feature in features:
+          self.weights[feature] += self.alpha * difference * features[feature]
         #util.raiseNotDefined()
 
     def final(self, state):
