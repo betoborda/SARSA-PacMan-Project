@@ -24,7 +24,6 @@ class SarsaLearningAgent(ReinforcementAgent):
       Sarsa-Learning Agent
 
       Functions you should fill in:
-        - computeValueFromQValues
         - computeActionFromQValues
         - getQValue
         - getAction
@@ -58,36 +57,9 @@ class SarsaLearningAgent(ReinforcementAgent):
         currentStateAction = (state,action)
         if currentStateAction in self.values:
            Q=self.values[currentStateAction]
-        #print("Q", Q)
         return Q
-        #util.raiseNotDefined()
-
-    def computeValueFromQValues(self, state):
-        """
-          Returns max_action Q(state,action)
-          where the max is over legal actions.  Note that if
-          there are no legal actions, which is the case at the
-          terminal state, you should return a value of 0.0.
-        """
-        "*** YOUR CODE HERE ***"
-        #return max q value for the given state or 0.0 if there are no legal actions
-        actions=self.getLegalActions(state)
-        #print(actions)
-        if actions:
-            maxQ=float("-inf")
-        else:
-            maxQ=0.0
-        for eachAction in actions:
-            Q=self.getQValue(state, eachAction)
-            if Q>maxQ:
-                maxQ=Q
-       # print(maxQ)
-        return maxQ 
-        #util.raiseNotDefined()
-
 
     def computeActionFromQValues(self, state):
-        #print("COMPUTE")
         """
           Compute the best action to take in a state.  Note that if there
           are no legal actions, which is the case at the terminal state,
@@ -108,7 +80,6 @@ class SarsaLearningAgent(ReinforcementAgent):
         #util.raiseNotDefined()
 
     def getAction(self, state):
-        #print("I AM IN GET ACTION")
         """
           Compute the action to take in the current state.  With
           probability self.epsilon, we should take a random action and
@@ -166,18 +137,15 @@ class SarsaLearningAgent(ReinforcementAgent):
     def getPolicy(self, state):
         return self.computeActionFromQValues(state)
 
-    def getValue(self, state):
-        return self.computeValueFromQValues(state)
 
 
 class SarsaQAgent(SarsaLearningAgent):
-    "Exactly the same as QLearningAgent, but with different default parameters"
 
     def __init__(self, epsilon=0.05,gamma=0.8,alpha=0.2, numTraining=0, **args):
         """
         These default parameters can be changed from the pacman.py command line.
         For example, to change the exploration rate, try:
-            python pacman.py -p PacmanQLearningAgent -a epsilon=0.1
+            python pacman.py -p SarsaQLearningAgent -a epsilon=0.1
 
         alpha    - learning rate
         epsilon  - exploration rate
@@ -193,7 +161,7 @@ class SarsaQAgent(SarsaLearningAgent):
 
     def getAction(self, state):
         """
-        Simply calls the getAction method of QLearningAgent and then
+        Simply calls the getAction method of SarsaLearningAgent and then
         informs parent of action for Pacman.  Do not change or remove this
         method.
         """
@@ -202,9 +170,9 @@ class SarsaQAgent(SarsaLearningAgent):
         return action
 
 
-class ApproximateQAgent(SarsaQAgent):
+class ApproximateSarsaAgent(SarsaQAgent):
     """
-       ApproximateQLearningAgent
+       ApproximateSarsaLearningAgent
 
        You should only have to overwrite getQValue
        and update.  All other QLearningAgent functions
@@ -237,14 +205,14 @@ class ApproximateQAgent(SarsaQAgent):
         return Q
         #util.raiseNotDefined()
 
-    def update(self, state, action, nextState, reward, action2):
-        print("IN UPDATE")
+    def update(self, state, action, nextState, reward):
+        action2=self.getAction(nextState)
+
         """
            Should update your weights based on transition
         """
         "*** YOUR CODE HERE ***"
-        #difference = (r + lambda * maxQ(s',a')) - Q(s, a)
-        #maxQ=self.computeValueFromQValues(nextState)
+        #difference = (r + lambda * (s',a')) - Q(s, a)
         if(action2!='none'):
             Q=self.getQValue(nextState, action2)
         else:
