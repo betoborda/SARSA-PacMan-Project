@@ -19,7 +19,7 @@ from featureExtractors import *
 import random,util,math
 
 class SarsaLearningAgent(ReinforcementAgent):
-    print("IN SARSA LEARNING AGENT")
+    print("In Sarsa Learning Agent")
     """
       Sarsa-Learning Agent
 
@@ -94,24 +94,20 @@ class SarsaLearningAgent(ReinforcementAgent):
         legalActions = self.getLegalActions(state)
         action = None
         "*** YOUR CODE HERE ***"
-        #print("Probability ", self.epsilon)
-        #print(util.flipCoin(self.epsilon))
         if legalActions:
             #take random action if true
             if util.flipCoin(self.epsilon):
                 action=random.choice(legalActions)
-            #take best policy
+                #decaying epsilon
+                self.epsilon = 0.1*self.epsilon
+            #else take best policy
             else:
                 action=self.getPolicy(state) 
         return action
         #util.raiseNotDefined()
 
-                 #(startState, action, endState, reward)
     def update(self, state, action, nextState, reward):
         action2=self.getAction(nextState)
-        #print("GET UPDATE")
-        #print(action2)
-        #print(action)
         """
           The parent class calls this to observe a
           state = action => nextState and reward transition.
@@ -124,19 +120,12 @@ class SarsaLearningAgent(ReinforcementAgent):
         #V(s)=Q(s,a)+alpha(R(s)+alpha*V(s')-Q(s,a))
         #print(self.getQValue(state, action))
         #Q=self.getQValue(nextState, action2)
-        #print("ACTION")
-        #print(nextState)
-        if(action2!='none'):
-            Q=self.getQValue(nextState, action2)
-        else:
-            Q=0.0
+        Q=self.getQValue(nextState, action2)
         self.values[(state,action)]=self.getQValue(state, action)+self.alpha*(reward+self.discount*Q-self.getQValue(state,action))
-        #print(self.values[(state,action)])
         #util.raiseNotDefined()
 
     def getPolicy(self, state):
         return self.computeActionFromQValues(state)
-
 
 
 class SarsaQAgent(SarsaLearningAgent):
@@ -195,10 +184,7 @@ class ApproximateSarsaAgent(SarsaQAgent):
         #Q(s,a) = Summation from i=1 to n fi(s, a)*wi
         Q=0
         featureVectors=self.featExtractor.getFeatures(state,action)
-        #print("Vectors ", featureVectors)
         for eachFeature in featureVectors:
-            #print("Feature ",eachFeature)
-            #print("Weights ",self.weights[eachFeature])
             f=featureVectors[eachFeature]
             w=self.weights[eachFeature]
             Q=Q+(f * w)
