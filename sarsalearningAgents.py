@@ -199,10 +199,8 @@ class ApproximateSarsaAgent(SarsaQAgent):
         """
         "*** YOUR CODE HERE ***"
         #difference = (r + lambda * (s',a')) - Q(s, a)
-        if(action2!='none'):
-            Q=self.getQValue(nextState, action2)
-        else:
-            Q=0.0
+       
+        Q=self.getQValue(nextState, action2)
         difference = (reward + self.discount * Q) - self.getQValue(state,action)
 
         #wi = wi + alpha* difference * fi(s, a)
