@@ -559,7 +559,6 @@ if __name__ == '__main__':
         decisionCallback = lambda state : getUserAction(state, mdp.getPossibleActions)
     else:
         decisionCallback = s.getAction
-        print("DECISION22 ", decisionCallback)
 
 
     # RUN EPISODES

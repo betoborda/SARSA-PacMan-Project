@@ -90,19 +90,21 @@ class SarsaLearningAgent(ReinforcementAgent):
           HINT: You might want to use util.flipCoin(prob)
           HINT: To pick randomly from a list, use random.choice(list)
         """
+       
         # Pick Action
         legalActions = self.getLegalActions(state)
         action = None
         "*** YOUR CODE HERE ***"
         if legalActions:
             #take random action if true
-            if util.flipCoin(self.epsilon):
-                action=random.choice(legalActions)
-                #decaying epsilon
-                self.epsilon = 0.1*self.epsilon
+       #     if util.flipCoin(self.epsilon):
+       #         action=random.choice(legalActions)
+            #decaying epsilon
+            self.epsilon = 0.1*self.epsilon
             #else take best policy
-            else:
-                action=self.getPolicy(state) 
+        #    else:
+            action=self.getPolicy(state) 
+
         return action
         #util.raiseNotDefined()
 
@@ -111,7 +113,6 @@ class SarsaLearningAgent(ReinforcementAgent):
         """
           The parent class calls this to observe a
           state = action => nextState and reward transition.
-          You should do your Q-Value update here
 
           NOTE: You should never call this function,
           it will be called on your behalf
@@ -120,15 +121,20 @@ class SarsaLearningAgent(ReinforcementAgent):
         #V(s)=Q(s,a)+alpha(R(s)+alpha*V(s')-Q(s,a))
         #print(self.getQValue(state, action))
         #Q=self.getQValue(nextState, action2)
-        Q=self.getQValue(nextState, action2)
+        if(action2!='none'):
+            Q=self.getQValue(nextState, action2)
+        else:
+            Q=0.0
         self.values[(state,action)]=self.getQValue(state, action)+self.alpha*(reward+self.discount*Q-self.getQValue(state,action))
+        #print(self.values[(state,action)])
         #util.raiseNotDefined()
 
     def getPolicy(self, state):
         return self.computeActionFromQValues(state)
 
 
-class SarsaQAgent(SarsaLearningAgent):
+
+class PacmanSarsaAgent(SarsaLearningAgent):
 
     def __init__(self, epsilon=0.05,gamma=0.8,alpha=0.2, numTraining=0, **args):
         """
@@ -159,7 +165,7 @@ class SarsaQAgent(SarsaLearningAgent):
         return action
 
 
-class ApproximateSarsaAgent(SarsaQAgent):
+class ApproximateSarsaAgent(PacmanSarsaAgent):
     """
        ApproximateSarsaLearningAgent
 
@@ -169,8 +175,9 @@ class ApproximateSarsaAgent(SarsaQAgent):
     """
     def __init__(self, extractor='IdentityExtractor', **args):
         self.featExtractor = util.lookup(extractor, globals())()
-        SarsaQAgent.__init__(self, **args)
+        PacmanSarsaAgent.__init__(self, **args)
         self.weights = util.Counter()
+
 
     def getWeights(self):
         return self.weights
@@ -184,7 +191,10 @@ class ApproximateSarsaAgent(SarsaQAgent):
         #Q(s,a) = Summation from i=1 to n fi(s, a)*wi
         Q=0
         featureVectors=self.featExtractor.getFeatures(state,action)
+        #print("Vectors ", featureVectors)
         for eachFeature in featureVectors:
+            #print("Feature ",eachFeature)
+            #print("Weights ",self.weights[eachFeature])
             f=featureVectors[eachFeature]
             w=self.weights[eachFeature]
             Q=Q+(f * w)
@@ -199,8 +209,10 @@ class ApproximateSarsaAgent(SarsaQAgent):
         """
         "*** YOUR CODE HERE ***"
         #difference = (r + lambda * (s',a')) - Q(s, a)
-       
-        Q=self.getQValue(nextState, action2)
+        if(action2!='none'):
+            Q=self.getQValue(nextState, action2)
+        else:
+            Q=0.0
         difference = (reward + self.discount * Q) - self.getQValue(state,action)
 
         #wi = wi + alpha* difference * fi(s, a)
@@ -213,7 +225,7 @@ class ApproximateSarsaAgent(SarsaQAgent):
     def final(self, state):
         "Called at the end of each game."
         # call the super-class final method
-        SarsaQAgent.final(self, state)
+        PacmanSarsaAgent.final(self, state)
         # did we finish training?
         if self.episodesSoFar == self.numTraining:
             # you might want to print your weights here for debugging
