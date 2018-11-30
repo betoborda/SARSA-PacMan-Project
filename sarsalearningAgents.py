@@ -68,7 +68,6 @@ class SarsaLearningAgent(ReinforcementAgent):
         "*** YOUR CODE HERE ***"
         #return max action for the given state or None if there are no legal actions
         actions=self.getLegalActions(state)
-        #print(actions)
         bestAction=None
         maxQ=float("-inf")
         for eachAction in actions:
@@ -79,55 +78,23 @@ class SarsaLearningAgent(ReinforcementAgent):
         return bestAction 
         #util.raiseNotDefined()
 
-    def getAction(self, state):
-        """
-          Compute the action to take in the current state.  With
-          probability self.epsilon, we should take a random action and
-          take the best policy action otherwise.  Note that if there are
-          no legal actions, which is the case at the terminal state, you
-          should choose None as the action.
-
-          HINT: You might want to use util.flipCoin(prob)
-          HINT: To pick randomly from a list, use random.choice(list)
-        """
-       
+    def getAction(self, state):       
         # Pick Action
         legalActions = self.getLegalActions(state)
         action = None
-        "*** YOUR CODE HERE ***"
         if legalActions:
-            #take random action if true
-       #     if util.flipCoin(self.epsilon):
-       #         action=random.choice(legalActions)
-            #decaying epsilon
-            self.epsilon = 0.1*self.epsilon
-            #else take best policy
-        #    else:
             action=self.getPolicy(state) 
-
         return action
-        #util.raiseNotDefined()
 
     def update(self, state, action, nextState, reward):
         action2=self.getAction(nextState)
-        """
-          The parent class calls this to observe a
-          state = action => nextState and reward transition.
-
-          NOTE: You should never call this function,
-          it will be called on your behalf
-        """
-        "*** YOUR CODE HERE ***"
         #V(s)=Q(s,a)+alpha(R(s)+alpha*V(s')-Q(s,a))
-        #print(self.getQValue(state, action))
-        #Q=self.getQValue(nextState, action2)
         if(action2!='none'):
             Q=self.getQValue(nextState, action2)
         else:
             Q=0.0
         self.values[(state,action)]=self.getQValue(state, action)+self.alpha*(reward+self.discount*Q-self.getQValue(state,action))
         #print(self.values[(state,action)])
-        #util.raiseNotDefined()
 
     def getPolicy(self, state):
         return self.computeActionFromQValues(state)
