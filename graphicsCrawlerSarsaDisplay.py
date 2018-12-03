@@ -41,16 +41,7 @@ class Application:
 
     def incrementSpeed(self, inc):
         self.tickTime *= inc
-#        self.epsilon = min(1.0, self.epsilon)
-#        self.epsilon = max(0.0,self.epsilon)
-#        self.learner.setSpeed(self.epsilon)
         self.speed_label['text'] = 'Step Delay: %.5f' % (self.tickTime)
-
-    def incrementEpsilon(self, inc):
-        self.ep += inc
-        self.epsilon = self.sigmoid(self.ep)
-        self.learner.setEpsilon(self.epsilon)
-        self.epsilon_label['text'] = 'Epsilon: %.3f' % (self.epsilon)
 
     def incrementGamma(self, inc):
         self.ga += inc
@@ -76,8 +67,6 @@ class Application:
 
         ## Epsilon Button + Label ##
         self.setupSpeedButtonAndLabel(win)
-
-        self.setupEpsilonButtonAndLabel(win)
 
         ## Gamma Button + Label ##
         self.setUpGammaButtonAndLabel(win)
@@ -122,18 +111,6 @@ class Application:
         text="+",command=(lambda: self.incrementGamma(self.inc)))
         self.gamma_plus.grid(row=1, column=2, padx=10)
 
-    def setupEpsilonButtonAndLabel(self, win):
-        self.epsilon_minus = Tkinter.Button(win,
-        text="-",command=(lambda: self.incrementEpsilon(self.dec)))
-        self.epsilon_minus.grid(row=0, column=3)
-
-        self.epsilon = self.sigmoid(self.ep)
-        self.epsilon_label = Tkinter.Label(win, text='Epsilon: %.3f' % (self.epsilon))
-        self.epsilon_label.grid(row=0, column=4)
-
-        self.epsilon_plus = Tkinter.Button(win,
-        text="+",command=(lambda: self.incrementEpsilon(self.inc)))
-        self.epsilon_plus.grid(row=0, column=5)
 
     def setupSpeedButtonAndLabel(self, win):
         self.speed_minus = Tkinter.Button(win,
@@ -182,9 +159,8 @@ class Application:
           simulation.SimulationEnvironment(self.robotEnvironment,agent)
         actionFn = lambda state: \
           self.robotEnvironment.getPossibleActions(state)
-        self.learner = qlearningAgents.QLearningAgent(actionFn=actionFn)
+        self.learner = sarsalearningAgents.SarsaLearningAgent(actionFn=actionFn)
 
-        self.learner.setEpsilon(self.epsilon)
         self.learner.setLearningRate(self.alpha)
         self.learner.setDiscount(self.gamma)
 

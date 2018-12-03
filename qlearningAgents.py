@@ -41,8 +41,6 @@ class QLearningAgent(ReinforcementAgent):
     def __init__(self, **args):
         "You can initialize Q-values here..."
         ReinforcementAgent.__init__(self, **args)
-
-        "*** YOUR CODE HERE ***"
         self.values = util.Counter()
 
 
@@ -52,7 +50,6 @@ class QLearningAgent(ReinforcementAgent):
           Should return 0.0 if we have never seen a state
           or the Q node value otherwise
         """
-        "*** YOUR CODE HERE ***"
         Q = 0.0
         currentStateAction = (state,action)
         if currentStateAction in self.values:
@@ -68,7 +65,6 @@ class QLearningAgent(ReinforcementAgent):
           there are no legal actions, which is the case at the
           terminal state, you should return a value of 0.0.
         """
-        "*** YOUR CODE HERE ***"
         #return max q value for the given state or 0.0 if there are no legal actions
         actions=self.getLegalActions(state)
         #print(actions)
@@ -91,7 +87,6 @@ class QLearningAgent(ReinforcementAgent):
           are no legal actions, which is the case at the terminal state,
           you should return None.
         """
-        "*** YOUR CODE HERE ***"
         #return max action for the given state or None if there are no legal actions
         actions=self.getLegalActions(state)
         #print(actions)
@@ -119,7 +114,6 @@ class QLearningAgent(ReinforcementAgent):
         # Pick Action
         legalActions = self.getLegalActions(state)
         action = None
-        "*** YOUR CODE HERE ***"
         #print("Probability ", self.epsilon)
         #print(util.flipCoin(self.epsilon))
         if legalActions:
@@ -141,7 +135,6 @@ class QLearningAgent(ReinforcementAgent):
           NOTE: You should never call this function,
           it will be called on your behalf
         """
-        "*** YOUR CODE HERE ***"
         #V(s)=Q(s,a)+alpha(R(s)+alpha*V(s')-Q(s,a))
         #print(self.getQValue(state, action))
         self.values[(state,action)]=self.getQValue(state, action)+self.alpha*(reward+self.discount*self.getValue(nextState)-self.getQValue(state,action))
@@ -208,11 +201,9 @@ class ApproximateQAgent(PacmanQAgent):
           Should return Q(state,action) = w * featureVector
           where * is the dotProduct operator
         """
-        "*** YOUR CODE HERE ***"
         #Q(s,a) = Summation from i=1 to n fi(s, a)*wi
         Q=0
         featureVectors=self.featExtractor.getFeatures(state,action)
-        #print("Vectors ", featureVectors)
         for eachFeature in featureVectors:
             #print("Feature ",eachFeature)
             #print("Weights ",self.weights[eachFeature])
@@ -226,7 +217,6 @@ class ApproximateQAgent(PacmanQAgent):
         """
            Should update your weights based on transition
         """
-        "*** YOUR CODE HERE ***"
         #difference = (r + lambda * maxQ(s',a')) - Q(s, a)
         maxQ=self.computeValueFromQValues(nextState)
         difference = (reward + self.discount * maxQ) - self.getQValue(state,action)
@@ -242,8 +232,5 @@ class ApproximateQAgent(PacmanQAgent):
         "Called at the end of each game."
         # call the super-class final method
         PacmanQAgent.final(self, state)
-        # did we finish training?
         if self.episodesSoFar == self.numTraining:
-            # you might want to print your weights here for debugging
-            "*** YOUR CODE HERE ***"
             pass

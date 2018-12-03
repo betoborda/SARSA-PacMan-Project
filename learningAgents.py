@@ -196,7 +196,7 @@ class ReinforcementAgent(ValueEstimationAgent):
         """
             Called by inherited class when
             an action is taken in a state
-        """
+        """       
         self.lastState = state
         self.lastAction = action
 

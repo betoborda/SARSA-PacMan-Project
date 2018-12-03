@@ -1,16 +1,5 @@
 # sarsalearningAgents.py
 # ------------------
-# Licensing Information:  You are free to use or extend these projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
-# Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero
-# (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and
-# Pieter Abbeel (pabbeel@cs.berkeley.edu).
-
 
 from game import *
 from learningAgents import ReinforcementAgent
@@ -30,7 +19,6 @@ class SarsaLearningAgent(ReinforcementAgent):
         - update
 
       Instance variables you have access to
-        - self.epsilon (exploration prob)
         - self.alpha (learning rate)
         - self.discount (discount rate)
 
@@ -52,7 +40,6 @@ class SarsaLearningAgent(ReinforcementAgent):
           Should return 0.0 if we have never seen a state
           or the Q node value otherwise
         """
-        "*** YOUR CODE HERE ***"
         Q = 0.0
         currentStateAction = (state,action)
         if currentStateAction in self.values:
@@ -65,21 +52,20 @@ class SarsaLearningAgent(ReinforcementAgent):
           are no legal actions, which is the case at the terminal state,
           you should return None.
         """
-        "*** YOUR CODE HERE ***"
         #return max action for the given state or None if there are no legal actions
         actions=self.getLegalActions(state)
         bestAction=None
         maxQ=float("-inf")
+        bestAction=random.choice(actions)
         for eachAction in actions:
             Q=self.getQValue(state, eachAction)
             if Q>maxQ:
                 maxQ=Q
                 bestAction=eachAction
         return bestAction 
-        #util.raiseNotDefined()
 
-    def getAction(self, state):       
-        # Pick Action
+
+    def getAction(self, state):
         legalActions = self.getLegalActions(state)
         action = None
         if legalActions:
@@ -103,18 +89,16 @@ class SarsaLearningAgent(ReinforcementAgent):
 
 class PacmanSarsaAgent(SarsaLearningAgent):
 
-    def __init__(self, epsilon=0.05,gamma=0.8,alpha=0.2, numTraining=0, **args):
+    def __init__(self,gamma=0.8,alpha=0.2, numTraining=0, **args):
         """
         These default parameters can be changed from the pacman.py command line.
         For example, to change the exploration rate, try:
-            python pacman.py -p SarsaQLearningAgent -a epsilon=0.1
+            python pacman.py -p SarsaQLearningAgent 
 
         alpha    - learning rate
-        epsilon  - exploration rate
         gamma    - discount factor
         numTraining - number of training episodes, i.e. no learning after these many episodes
         """
-        args['epsilon'] = epsilon
         args['gamma'] = gamma
         args['alpha'] = alpha
         args['numTraining'] = numTraining
@@ -154,11 +138,9 @@ class ApproximateSarsaAgent(PacmanSarsaAgent):
           Should return Q(state,action) = w * featureVector
           where * is the dotProduct operator
         """
-        "*** YOUR CODE HERE ***"
         #Q(s,a) = Summation from i=1 to n fi(s, a)*wi
         Q=0
         featureVectors=self.featExtractor.getFeatures(state,action)
-        #print("Vectors ", featureVectors)
         for eachFeature in featureVectors:
             #print("Feature ",eachFeature)
             #print("Weights ",self.weights[eachFeature])
@@ -166,7 +148,6 @@ class ApproximateSarsaAgent(PacmanSarsaAgent):
             w=self.weights[eachFeature]
             Q=Q+(f * w)
         return Q
-        #util.raiseNotDefined()
 
     def update(self, state, action, nextState, reward):
         action2=self.getAction(nextState)
@@ -193,8 +174,5 @@ class ApproximateSarsaAgent(PacmanSarsaAgent):
         "Called at the end of each game."
         # call the super-class final method
         PacmanSarsaAgent.final(self, state)
-        # did we finish training?
         if self.episodesSoFar == self.numTraining:
-            # you might want to print your weights here for debugging
-            "*** YOUR CODE HERE ***"
             pass
