@@ -389,9 +389,6 @@ def parseOptions():
                          type='float',dest='noise',default=0.2,
                          metavar="P", help='How often action results in ' +
                          'unintended direction (default %default)' )
-    optParser.add_option('-e', '--epsilon',action='store',
-                         type='float',dest='epsilon',default=0.3,
-                         metavar="E", help='Chance of taking a random action in q-learning (default %default)')
     optParser.add_option('-l', '--learningRate',action='store',
                          type='float',dest='learningRate',default=0.5,
                          metavar="P", help='TD learning rate (default %default)' )
@@ -484,13 +481,12 @@ if __name__ == '__main__':
     if opts.agent == 'value':
         s = valueIterationAgents.ValueIterationAgent(mdp, opts.discount, opts.iters)
     elif opts.agent == 'q':
-        #env.getPossibleActions, opts.discount, opts.learningRate, opts.epsilon
+        #env.getPossibleActions, opts.discount, opts.learningRate
         #simulationFn = lambda agent, state: simulation.GridworldSimulation(agent,state,mdp)
         gridWorldEnv = GridworldEnvironment(mdp)
         actionFn = lambda state: mdp.getPossibleActions(state)
         qLearnOpts = {'gamma': opts.discount,
                       'alpha': opts.learningRate,
-                      'epsilon': opts.epsilon,
                       'actionFn': actionFn}
         s = sarsalearningAgents.SarsaLearningAgent(**qLearnOpts)
     elif opts.agent == 'random':

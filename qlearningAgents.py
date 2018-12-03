@@ -76,9 +76,7 @@ class QLearningAgent(ReinforcementAgent):
             Q=self.getQValue(state, eachAction)
             if Q>maxQ:
                 maxQ=Q
-       # print(maxQ)
         return maxQ 
-        #util.raiseNotDefined()
 
 
     def computeActionFromQValues(self, state):

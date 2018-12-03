@@ -46,6 +46,26 @@ class SarsaLearningAgent(ReinforcementAgent):
            Q=self.values[currentStateAction]
         return Q
 
+    def computeValueFromQValues(self, state):
+        """
+          Returns max_action Q(state,action)
+          where the max is over legal actions.  Note that if
+          there are no legal actions, which is the case at the
+          terminal state, you should return a value of 0.0.
+        """
+        #return max q value for the given state or 0.0 if there are no legal actions
+        actions=self.getLegalActions(state)
+        #print(actions)
+        if actions:
+            maxQ=float("-inf")
+        else:
+            maxQ=0.0
+        for eachAction in actions:
+            Q=self.getQValue(state, eachAction)
+            if Q>maxQ:
+                maxQ=Q
+        return maxQ 
+
     def computeActionFromQValues(self, state):
         """
           Compute the best action to take in a state.  Note that if there
@@ -84,6 +104,10 @@ class SarsaLearningAgent(ReinforcementAgent):
 
     def getPolicy(self, state):
         return self.computeActionFromQValues(state)
+
+    
+    def getValue(self, state):
+        return self.computeValueFromQValues(state)
 
 
 
