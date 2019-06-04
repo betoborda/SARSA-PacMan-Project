@@ -13,17 +13,14 @@
 
 
 import testClasses
-import random, math, traceback, sys, os
-import layout, textDisplay, pacman, gridworld
+import os
+from CodeFiles import gridworld, pacman
 import time
-from util import Counter, TimeoutFunction, FixedRandom
-from collections import defaultdict
+from util import FixedRandom
 from pprint import PrettyPrinter
 from hashlib import sha1
 pp = PrettyPrinter()
 VERBOSE = False
-
-import gridworld
 
 LIVINGREWARD = -0.1
 NOISE = 0.2

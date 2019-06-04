@@ -29,8 +29,6 @@ import threading
 import sys
 import crawler
 #import pendulum
-import math
-from math import pi as PI
 
 robotType = 'crawler'
 

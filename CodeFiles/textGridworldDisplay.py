@@ -12,8 +12,6 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
-import util
-
 class TextGridworldDisplay:
 
     def __init__(self, gridworld):
@@ -308,17 +306,18 @@ def wrap_always(text, width):
 # TEST OF DISPLAY CODE
 
 if __name__ == '__main__':
-    import gridworld, util
+    import util
+    from CodeFiles import gridworld
 
     grid = gridworld.getCliffGrid3()
     print grid.getStates()
 
     policy = dict([(state,'east') for state in grid.getStates()])
-    values = util.Counter(dict([(state,1000.23) for state in grid.getStates()]))
+    values = util.Counter(dict([(state, 1000.23) for state in grid.getStates()]))
     prettyPrintValues(grid, values, policy, currentState = (0,0))
 
     stateCrossActions = [[(state, action) for action in grid.getPossibleActions(state)] for state in grid.getStates()]
     qStates = reduce(lambda x,y: x+y, stateCrossActions, [])
     qValues = util.Counter(dict([((state, action), 10.5) for state, action in qStates]))
-    qValues = util.Counter(dict([((state, action), 10.5) for state, action in reduce(lambda x,y: x+y, stateCrossActions, [])]))
+    qValues = util.Counter(dict([((state, action), 10.5) for state, action in reduce(lambda x, y: x + y, stateCrossActions, [])]))
     prettyPrintQValues(grid, qValues, currentState = (0,0))

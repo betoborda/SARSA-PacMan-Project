@@ -39,14 +39,14 @@ code to run a game.  This file is divided into three sections:
 To play your first game, type 'python pacman.py' from the command line.
 The keys are 'a', 's', 'd', and 'w' to move (or arrow keys).  Have fun!
 """
-from game import GameStateData
-from game import Game
-from game import Directions
-from game import Actions
+from CodeFiles.game import GameStateData
+from CodeFiles.game import Game
+from CodeFiles.game import Directions
+from CodeFiles.game import Actions
 from util import nearestPoint
 from util import manhattanDistance
-import util, layout
-import sys, types, time, random, os
+from CodeFiles import layout
+import sys, random, os
 
 ###################################################
 # YOUR INTERFACE TO THE PACMAN WORLD: A GameState #
@@ -533,7 +533,7 @@ def readCommand( argv ):
     if options.fixRandomSeed: random.seed('cs188')
 
     # Choose a layout
-    args['layout'] = layout.getLayout( options.layout )
+    args['layout'] = layout.getLayout(options.layout)
     if args['layout'] == None: raise Exception("The layout " + options.layout + " cannot be found")
 
     # Choose a Pacman agent
@@ -564,7 +564,7 @@ def readCommand( argv ):
         textDisplay.SLEEP_TIME = options.frameTime
         args['display'] = textDisplay.PacmanGraphics()
     else:
-        import graphicsDisplay
+        from CodeFiles import graphicsDisplay
         args['display'] = graphicsDisplay.PacmanGraphics(options.zoom, frameTime = options.frameTime)
     args['numGames'] = options.numGames
     args['record'] = options.record
@@ -608,9 +608,10 @@ def loadAgent(pacman, nographics):
     raise Exception('The agent ' + pacman + ' is not specified in any *Agents.py.')
 
 def replayGame( layout, actions, display ):
-    import pacmanAgents, ghostAgents
+    import pacmanAgents
+    from CodeFiles import ghostAgents
     rules = ClassicGameRules()
-    agents = [pacmanAgents.GreedyAgent()] + [ghostAgents.RandomGhost(i+1) for i in range(layout.getNumGhosts())]
+    agents = [pacmanAgents.GreedyAgent()] + [ghostAgents.RandomGhost(i + 1) for i in range(layout.getNumGhosts())]
     game = rules.newGame( layout, agents[0], agents[1:], display )
     state = game.state
     display.initialize(state.data)

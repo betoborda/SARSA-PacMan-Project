@@ -13,9 +13,9 @@
 
 
 from pacman import Directions
-from game import Agent
+from CodeFiles.game import Agent
 import random
-import game
+from CodeFiles import game
 import util
 
 class LeftTurnAgent(game.Agent):

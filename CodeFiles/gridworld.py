@@ -454,7 +454,7 @@ if __name__ == '__main__':
     ###########################
 
     import gridworld
-    mdpFunction = getattr(gridworld, "get"+opts.grid)
+    mdpFunction = getattr(gridworld, "get" + opts.grid)
     mdp = mdpFunction()
     mdp.setLivingReward(opts.livingReward)
     mdp.setNoise(opts.noise)

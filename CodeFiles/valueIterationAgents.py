@@ -12,9 +12,9 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
-import mdp, util
+import util
 
-from learningAgents import ValueEstimationAgent
+from CodeFiles.learningAgents import ValueEstimationAgent
 
 class ValueIterationAgent(ValueEstimationAgent):
     """
@@ -48,7 +48,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         #for each iteration, go to each state and for each possible action in that state compute Q values
         #find the max Q value for each state  
         for iteration in range(self.iterations):
-            currentValues=util.Counter()
+            currentValues= util.Counter()
             stateValues=self.mdp.getStates()
             for eachState in stateValues:
                 maxQ=float("-inf")
